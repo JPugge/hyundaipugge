@@ -14,9 +14,86 @@ devices:
       tx_delay: 50ms
       init_commands: ["ATSH7E4"]
     sensors:
+      # Alle Werte aus Abfrage 2101 (Batteriesteuergeraet), a=Byte 0 ... z=Byte 25
       - key: soc_bms
         mode: "21"
         pid: "01"
         update_interval: 30s
         formula: "e/2"
         unit: "%"
+        device_class: battery
+        state_class: measurement
+
+      - key: battery_voltage
+        mode: "21"
+        pid: "01"
+        update_interval: 30s
+        formula: "(m*256+n)*0.1"
+        unit: "V"
+        device_class: voltage
+        state_class: measurement
+
+      # Achtung: negative Werte (Rekuperation/Laden) werden ohne Vorzeichenbehandlung falsch angezeigt
+      - key: battery_current
+        mode: "21"
+        pid: "01"
+        update_interval: 30s
+        formula: "(k*256+l)*0.1"
+        unit: "A"
+        device_class: current
+        state_class: measurement
+
+      - key: available_charge_power
+        mode: "21"
+        pid: "01"
+        update_interval: 60s
+        formula: "(f*256+g)*0.01"
+        unit: "kW"
+        device_class: power
+        state_class: measurement
+
+      - key: available_discharge_power
+        mode: "21"
+        pid: "01"
+        update_interval: 60s
+        formula: "(h*256+i)*0.01"
+        unit: "kW"
+        device_class: power
+        state_class: measurement
+
+      # Temperaturen: Werte unter 0 Grad werden ohne Vorzeichenbehandlung falsch angezeigt
+      - key: battery_temp_max
+        mode: "21"
+        pid: "01"
+        update_interval: 60s
+        formula: "o"
+        unit: "°C"
+        device_class: temperature
+        state_class: measurement
+
+      - key: battery_temp_min
+        mode: "21"
+        pid: "01"
+        update_interval: 60s
+        formula: "p"
+        unit: "°C"
+        device_class: temperature
+        state_class: measurement
+
+      - key: max_cell_voltage
+        mode: "21"
+        pid: "01"
+        update_interval: 60s
+        formula: "x*0.02"
+        unit: "V"
+        device_class: voltage
+        state_class: measurement
+
+      - key: min_cell_voltage
+        mode: "21"
+        pid: "01"
+        update_interval: 60s
+        formula: "z*0.02"
+        unit: "V"
+        device_class: voltage
+      state_class: measurement
